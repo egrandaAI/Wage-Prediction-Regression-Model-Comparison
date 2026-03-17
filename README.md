@@ -1,7 +1,8 @@
 # Wage Prediction & Regression Model Comparison using Machine Learning
 
-## Live Report
+## 🌐 Live Report
 
+Explore the full consulting-style report here: 
 [Open the interactive HTML report](https://egrandaAI.github.io/Wage-Prediction-Regression-Model-Comparison/)
 
 ## Overview
