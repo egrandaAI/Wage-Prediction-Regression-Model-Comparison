@@ -1,5 +1,9 @@
 # Wage Prediction & Regression Model Comparison using Machine Learning
 
+## Live Report
+
+[Open the interactive HTML report](https://egrandaAI.github.io/Wage-Prediction-Regression-Model-Comparison/)
+
 ## Overview
 
 This project explores wage prediction using a structured machine learning pipeline, focusing on comparing multiple regression models to identify the most accurate and robust approach.
