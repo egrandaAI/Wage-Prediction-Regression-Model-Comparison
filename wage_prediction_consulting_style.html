@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wage Prediction — Consulting Style Report</title>
+  <style>
+    :root{
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --ink:#141826;
+      --muted:#5f6b85;
+      --line:#e7eaf3;
+      --accent:#5b6cff;
+      --accent-2:#8c6bff;
+      --good:#1f9d66;
+      --warn:#d97706;
+      --bad:#c2410c;
+      --shadow:0 12px 30px rgba(16,24,40,.08);
+      --radius:18px;
+      --max:1120px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--ink);
+      background:linear-gradient(180deg,#f8f9ff 0%, #f5f7fb 100%);
+      line-height:1.55;
+    }
+    .wrap{max-width:var(--max); margin:0 auto; padding:0 24px}
+    .hero{
+      background:
+        radial-gradient(900px 320px at 90% -5%, rgba(140,107,255,.22), transparent 60%),
+        radial-gradient(700px 320px at 0% 0%, rgba(91,108,255,.18), transparent 55%),
+        linear-gradient(180deg,#ffffff 0%, #f7f8ff 100%);
+      border-bottom:1px solid var(--line);
+    }
+    .nav{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:18px 0 8px 0;
+    }
+    .brand{
+      font-weight:700; letter-spacing:.2px;
+    }
+    .nav a{
+      color:var(--muted); text-decoration:none; margin-left:18px; font-size:.95rem;
+    }
+    .hero-grid{
+      display:grid; grid-template-columns:1.2fr .8fr; gap:28px;
+      padding:42px 0 48px 0;
+    }
+    h1{
+      font-size:clamp(2.2rem,4vw,4rem); line-height:1.04; margin:0 0 16px 0;
+      letter-spacing:-.04em;
+    }
+    .subtitle{
+      font-size:1.15rem; color:var(--muted); max-width:720px; margin-bottom:24px;
+    }
+    .pill-row{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:24px}
+    .pill{
+      padding:9px 14px; border:1px solid var(--line); border-radius:999px;
+      background:rgba(255,255,255,.9); color:#2e3650; font-size:.92rem;
+    }
+    .cta-row{display:flex; gap:12px; flex-wrap:wrap}
+    .btn{
+      display:inline-block; text-decoration:none; border-radius:12px;
+      padding:12px 16px; font-weight:600; font-size:.95rem;
+      border:1px solid transparent;
+    }
+    .btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent-2)); color:#fff; box-shadow:var(--shadow)}
+    .btn.secondary{background:#fff; color:var(--ink); border-color:var(--line)}
+    .hero-card{
+      background:var(--card); border:1px solid var(--line); border-radius:24px;
+      padding:22px; box-shadow:var(--shadow); align-self:start;
+    }
+    .label{font-size:.8rem; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); font-weight:700}
+    .big-metric{font-size:2.6rem; font-weight:800; margin:10px 0 4px}
+    .muted{color:var(--muted)}
+    main section{padding:34px 0}
+    .section-head{display:flex; justify-content:space-between; align-items:end; gap:12px; margin-bottom:18px}
+    .section-head h2{margin:0; font-size:1.65rem; letter-spacing:-.03em}
+    .section-head p{margin:0; color:var(--muted)}
+    .grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:18px}
+    .grid-2{display:grid; grid-template-columns:repeat(2,1fr); gap:18px}
+    .card{
+      background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+      padding:20px; box-shadow:var(--shadow);
+    }
+    .card h3{margin:0 0 10px 0; font-size:1.08rem}
+    .card p{margin:0; color:var(--muted)}
+    ul.clean{margin:10px 0 0 18px; padding:0}
+    ul.clean li{margin:8px 0}
+    .highlight{
+      border-left:4px solid var(--accent);
+      background:linear-gradient(180deg,#fff,#fbfbff);
+    }
+    .kpis{
+      display:grid; grid-template-columns:repeat(4,1fr); gap:14px;
+      margin-top:10px;
+    }
+    .kpi{
+      background:#fff; border:1px solid var(--line); border-radius:16px; padding:16px;
+    }
+    .kpi .v{font-size:1.7rem; font-weight:800}
+    .kpi .t{font-size:.88rem; color:var(--muted)}
+    table{
+      width:100%; border-collapse:collapse; background:#fff; border-radius:16px;
+      overflow:hidden; border:1px solid var(--line);
+    }
+    th,td{padding:14px 14px; border-bottom:1px solid var(--line); text-align:left; vertical-align:top}
+    th{background:#f8f9fd; font-size:.88rem; color:#44506a}
+    tr:last-child td{border-bottom:none}
+    .tag{
+      display:inline-block; padding:5px 10px; border-radius:999px; font-size:.8rem; font-weight:700;
+      border:1px solid var(--line); background:#fff;
+    }
+    .good{color:var(--good)}
+    .warn{color:var(--warn)}
+    .bad{color:var(--bad)}
+    .small{font-size:.92rem}
+    .two-col-text{display:grid; grid-template-columns:1fr 1fr; gap:18px}
+    footer{
+      padding:28px 0 56px 0; color:var(--muted); font-size:.92rem;
+    }
+    .footer-box{
+      background:var(--card); border:1px solid var(--line); border-radius:18px; padding:18px;
+    }
+    @media (max-width: 980px){
+      .hero-grid, .grid-3, .grid-2, .two-col-text, .kpis {grid-template-columns:1fr}
+      .nav{flex-direction:column; align-items:flex-start; gap:8px}
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <div class="wrap">
+      <div class="nav">
+        <div class="brand">Estefania Granda — Consulting Style Case Report</div>
+        <div>
+          <a href="#summary">Summary</a>
+          <a href="#approach">Approach</a>
+          <a href="#models">Models</a>
+          <a href="#implications">Implications</a>
+        </div>
+      </div>
+
+      <div class="hero-grid">
+        <div>
+          <div class="label">Machine Learning Case Study</div>
+          <h1>Wage Prediction & Regression Model Comparison</h1>
+          <div class="subtitle">
+            A consulting-style synthesis of a wage prediction project, translating a technical notebook into an executive, decision-oriented report focused on model robustness, overfitting risk, and business relevance.
+          </div>
+
+          <div class="pill-row">
+            <div class="pill">Regression modeling</div>
+            <div class="pill">Feature engineering</div>
+            <div class="pill">Grid search</div>
+            <div class="pill">Cross-validation</div>
+            <div class="pill">Model risk assessment</div>
+          </div>
+
+          <div class="cta-row">
+            <a class="btn primary" href="#models">See model comparison</a>
+            <a class="btn secondary" href="#recommendation">Read final recommendation</a>
+          </div>
+        </div>
+
+        <div class="hero-card">
+          <div class="label">Headline finding</div>
+          <div class="big-metric">Ridge</div>
+          <div style="font-weight:700; margin-bottom:8px">Selected as the most reliable final model</div>
+          <div class="muted small">
+            Ridge with alpha = 10 delivered the highest cross-validation performance in the comparison workflow, prioritizing generalization over inflated in-sample fit.
+          </div>
+          <div class="kpis">
+            <div class="kpi">
+              <div class="v">0.253</div>
+              <div class="t">Best CV R²</div>
+            </div>
+            <div class="kpi">
+              <div class="v">0.316</div>
+              <div class="t">Gradient Boosting Test R²</div>
+            </div>
+            <div class="kpi">
+              <div class="v">0.892</div>
+              <div class="t">Random Forest Train R²</div>
+            </div>
+            <div class="kpi">
+              <div class="v">0.220</div>
+              <div class="t">Random Forest Test R²</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main class="wrap">
+    <section id="summary">
+      <div class="section-head">
+        <h2>Executive Summary</h2>
+        <p>What matters most for a decision-maker</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card highlight">
+          <h3>Business question</h3>
+          <p>
+            Can wage levels be predicted with enough reliability to support compensation benchmarking and workforce analytics, and which regression approach offers the best balance between accuracy and generalization?
+          </p>
+        </div>
+        <div class="card">
+          <h3>Main conclusion</h3>
+          <p>
+            The project shows that wage prediction is feasible, but only with moderate explanatory power. More complex models improved fit in some cases, yet also increased overfitting risk. The final choice therefore favored robustness over apparent training performance.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Strategic takeaway</h3>
+          <p>
+            The dataset supports directional wage insight rather than high-stakes salary decisions. It is useful for exploratory benchmarking, but not sufficient on its own for production-grade pay recommendations without richer labor market variables.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="context">
+      <div class="section-head">
+        <h2>Problem Context</h2>
+        <p>Why this project is relevant</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Why wage prediction matters</h3>
+          <ul class="clean">
+            <li>Supports salary benchmarking and compensation analysis.</li>
+            <li>Helps identify structural drivers of income disparities.</li>
+            <li>Enables more evidence-based workforce and HR analytics.</li>
+            <li>Creates a foundation for future interactive decision tools.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Project objective</h3>
+          <p>
+            Build a structured regression pipeline that handles preprocessing, encoding, feature selection, model comparison, and validation, then select the model with the strongest cross-validation performance and assess residuals and feature importance.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="approach">
+      <div class="section-head">
+        <h2>Analytical Approach</h2>
+        <p>How the notebook was translated into a rigorous workflow</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3>1. Data preparation</h3>
+          <p>
+            The workflow addressed missing values, converted object variables into numeric form where needed, and applied one-hot encoding to non-ordinal categorical fields such as race.
+          </p>
+        </div>
+        <div class="card">
+          <h3>2. Exploratory analysis</h3>
+          <p>
+            Numerical and categorical distributions were reviewed to understand earnings patterns and feature behavior. Categories with very similar earnings distributions were consolidated to improve interpretability.
+          </p>
+        </div>
+        <div class="card">
+          <h3>3. Model evaluation</h3>
+          <p>
+            Several regressors were compared through training/test performance and grid search. Cross-validation was used as the main decision criterion to avoid choosing an overfit model.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="findings">
+      <div class="section-head">
+        <h2>Key Findings</h2>
+        <p>Insights emerging from the notebook narrative and outputs</p>
+      </div>
+
+      <div class="two-col-text">
+        <div class="card">
+          <h3>Model behavior</h3>
+          <ul class="clean">
+            <li>Random Forest achieved very high in-sample fit but deteriorated sharply on the test set, signaling clear overfitting.</li>
+            <li>Gradient Boosting improved test performance and reduced the overfit gap, making it the strongest manual model among the tested nonlinear approaches.</li>
+            <li>Grid search ultimately selected Ridge(alpha = 10), indicating that regularization offered the best balance of stability and out-of-sample consistency in the comparison framework.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Data interpretation</h3>
+          <ul class="clean">
+            <li>Wage patterns appear only partially explained by the available variables.</li>
+            <li>Categorical socioeconomic features matter, but the current feature space still leaves substantial unexplained variance.</li>
+            <li>The notebook’s own commentary correctly recognizes that the best scores remain useful but not fully satisfactory, which is an important sign of methodological honesty.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="models">
+      <div class="section-head">
+        <h2>Model Comparison</h2>
+        <p>Performance must be read together with overfitting risk</p>
+      </div>
+
+      <div class="card">
+        <table>
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Key metric(s)</th>
+              <th>Interpretation</th>
+              <th>Assessment</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Random Forest Regressor</strong></td>
+              <td>
+                Train R² = <strong>0.892</strong><br/>
+                Test R² = <strong>0.220</strong>
+              </td>
+              <td>
+                Strong training fit, but weak test performance. The gap between train and test scores is too large for confident deployment.
+              </td>
+              <td><span class="tag bad">Overfitting risk</span></td>
+            </tr>
+            <tr>
+              <td><strong>Gradient Boosting Regressor</strong></td>
+              <td>
+                Train R² = <strong>0.616</strong><br/>
+                Test R² = <strong>0.316</strong>
+              </td>
+              <td>
+                Best manual model in the notebook comparison. Improves test performance and shows more controlled overfitting than Random Forest, though still moderate overall predictive power.
+              </td>
+              <td><span class="tag warn">Promising but limited</span></td>
+            </tr>
+            <tr>
+              <td><strong>Ridge (Grid Search Winner)</strong></td>
+              <td>
+                Best CV R² = <strong>0.253</strong><br/>
+                Alpha = <strong>10</strong>
+              </td>
+              <td>
+                Selected through the formal comparison workflow because it offered the strongest cross-validation result. This suggests the most reliable generalization among the candidate models under the chosen evaluation process.
+              </td>
+              <td><span class="tag good">Final selection</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="recommendation">
+      <div class="section-head">
+        <h2>Recommendation</h2>
+        <p>What should be taken forward</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card highlight">
+          <h3>Recommended model for the project deliverable</h3>
+          <p>
+            <strong>Ridge Regression (alpha = 10)</strong> should remain the final selected model because the project brief explicitly prioritizes the highest cross-validation performer. Even if Gradient Boosting delivered a higher test R² in one split, Ridge is the more defensible choice under the assignment’s generalization-first logic.
+          </p>
+        </div>
+        <div class="card">
+          <h3>How to position the result professionally</h3>
+          <p>
+            This project should be framed as a strong example of <strong>responsible model selection</strong>: the final recommendation was not based on the most visually appealing training score, but on the model that best balanced robustness, reproducibility, and methodological rigor.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="implications">
+      <div class="section-head">
+        <h2>Business Implications</h2>
+        <p>Where this analysis is useful in practice</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3>Compensation benchmarking</h3>
+          <p>
+            Useful for directional salary analysis, identifying broad income patterns, and testing how demographic or professional features relate to wage outcomes.
+          </p>
+        </div>
+        <div class="card">
+          <h3>HR analytics</h3>
+          <p>
+            Can support exploratory fairness reviews and pay-structure analysis, especially when paired with richer contextual variables such as geography, firm size, or tenure.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Decision support</h3>
+          <p>
+            Suitable as an analytical layer, not as an autonomous wage-setting engine. Human review and richer labor market data remain essential.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="limits">
+      <div class="section-head">
+        <h2>Limitations & Next Steps</h2>
+        <p>What would strengthen the model</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>Current limitations</h3>
+          <ul class="clean">
+            <li>Moderate predictive power suggests omitted variables are still significant.</li>
+            <li>Some nonlinear models improved fit but at the cost of generalization.</li>
+            <li>The available data appears better suited for explanatory analysis than highly accurate wage prediction.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Recommended next steps</h3>
+          <ul class="clean">
+            <li>Add richer variables such as location, sector, firm size, tenure, and experience depth.</li>
+            <li>Test additional regularized and boosting approaches with stronger feature engineering.</li>
+            <li>Introduce SHAP or similar explainability techniques for a more executive-friendly interpretation layer.</li>
+            <li>Convert the final model into an interactive benchmarking tool only after improving the feature space.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap">
+    <div class="footer-box">
+      <strong>About this version</strong><br/>
+      This page is a redesigned consulting-style HTML summary based on the original wage prediction notebook and exported HTML. It intentionally prioritizes clarity, hierarchy, and business interpretation over raw notebook structure.
+    </div>
+  </footer>
+</body>
+</html>
